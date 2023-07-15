@@ -3,7 +3,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "Headers/Graphics.h"
+
+// Functions
+
+void printEngineTitle();
+
 // Constants
+
 const unsigned int WINDOW_WIDTH   = 800;
 const unsigned int WINDOW_HEIGHT  = 600;
 const char*        WINDOW_TITLE   = "GLFW";
@@ -12,11 +19,18 @@ const char*        ENGINE_AUTHOR  = "Marek Hodan";
 const char*        ENGINE_LICENSE = "GNU GPLv3";
 const char*        ENGINE_VERSION = "0.1";
 
-void printEngineTitle();
+// Vertices
+
+GLfloat vertices[] = {
+  -0.5f, -0.5f, 0.f,
+   0.5f, -0.5f, 0.f,
+   0.0f,  0.5f, 0.f,
+};
 
 int main()
 {
   // Initialzing GLFW
+
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -25,6 +39,7 @@ int main()
   printEngineTitle();
 
   // Creating the Window
+
   GLFWwindow* window = glfwCreateWindow(
     WINDOW_WIDTH,
     WINDOW_HEIGHT,
@@ -43,6 +58,7 @@ int main()
   printf("GLFW:   %s\n", glfwGetVersionString());
 
   // Initializing GLEW
+
   GLenum err = glewInit();
   if (GLEW_OK != err)
   {
@@ -54,13 +70,20 @@ int main()
   printf("GLEW:   %s\n", glewGetString(GLEW_VERSION));
 
   // Clear Color
+
   GLclampf red   = 0.0f;
   GLclampf green = 0.3f;
   GLclampf blue  = 0.3f;
   GLclampf alpha = 1.0f;
   glClearColor(red, green, blue, alpha);
 
+  // VBO
+
+  VBO VBO1;
+  dsr_initVBO(&VBO1, vertices, sizeof(vertices) / sizeof(GLfloat));
+
   // Main Loop
+
   while (!glfwWindowShouldClose(window))
   {
     glfwPollEvents();
@@ -69,10 +92,13 @@ int main()
   }
 
   // Terminating the Program
+
   glfwDestroyWindow(window);
   glfwTerminate();
   return EXIT_SUCCESS;
 }
+
+// Functions
 
 void printEngineTitle()
 {
