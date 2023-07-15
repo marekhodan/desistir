@@ -2,13 +2,11 @@
 #include <GLFW/glfw3.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 
+#include "Headers/Game.h"
 #include "Headers/Graphics.h"
 #include "Headers/File.h"
-
-// Functions
-
-void printEngineTitle();
 
 // Callbacks
 
@@ -42,53 +40,22 @@ GLuint indices[] = {
 
 int main()
 {
-  // Initialzing GLFW
+  // Window
 
-  glfwInit();
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  GLFWwindow* window = NULL;
+  dsr_printEngineInfo();
 
-  printEngineTitle();
+  // Initializing
 
-  // Creating the Window
+  bool initializedSuccessfully = true;
+  initializedSuccessfully = dsr_initializeGlfw();
+  initializedSuccessfully = dsr_initializeWindow(&window, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
+  initializedSuccessfully = dsr_initializeGlew();
 
-  GLFWwindow* window = glfwCreateWindow(
-    WINDOW_WIDTH,
-    WINDOW_HEIGHT,
-    WINDOW_TITLE,
-    NULL,
-    NULL
-  );
-  if (window == NULL)
+  if (!initializedSuccessfully)
   {
-    printf("Failed to create a GLFW Window!\n");
-    glfwTerminate();
-    return -1;
+    return EXIT_FAILURE;
   }
-  glfwMakeContextCurrent(window);
-  printf("OpenGL: %s\n", glGetString(GL_VERSION));
-  printf("GLFW:   %s\n", glfwGetVersionString());
-
-  // Initializing GLEW
-
-  GLenum err = glewInit();
-  if (GLEW_OK != err)
-  {
-    printf("Failed to initialize GLEW!\n");
-    printf("Error: %s\n", glewGetErrorString(err));
-    glfwTerminate();
-    return -1;
-  }
-  printf("GLEW:   %s\n", glewGetString(GLEW_VERSION));
-
-  // Clear Color
-
-  GLclampf red   = 0.0f;
-  GLclampf green = 0.3f;
-  GLclampf blue  = 0.3f;
-  GLclampf alpha = 1.0f;
-  glClearColor(red, green, blue, alpha);
 
   // Shaders
 
@@ -142,15 +109,6 @@ int main()
   glfwDestroyWindow(window);
   glfwTerminate();
   return EXIT_SUCCESS;
-}
-
-// Functions
-
-void printEngineTitle()
-{
-  printf("%s %s\n", ENGINE_NAME, ENGINE_VERSION);
-  printf("Created by %s\n", ENGINE_AUTHOR);
-  printf("Licensed under %s\n\n", ENGINE_LICENSE);
 }
 
 // Callbacks
