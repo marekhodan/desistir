@@ -85,13 +85,23 @@ int main()
   GLclampf alpha = 1.0f;
   glClearColor(red, green, blue, alpha);
 
-  // VBO and EBO
+  // VAO, VBO, and EBO
 
+  VAO VAO1;
   VBO VBO1;
   EBO EBO1;
 
+  dsr_initVAO(&VAO1);
   dsr_initVBO(&VBO1, vertices, sizeof(vertices) / sizeof(GLfloat));
   dsr_initEBO(&EBO1, indices, sizeof(indices) / sizeof(GLuint));
+
+  dsr_bindVAO(&VAO1);
+  dsr_bindVBO(&VBO1);
+  dsr_bindEBO(&EBO1);
+
+  dsr_unbindVAO();
+  dsr_unbindVBO();
+  dsr_unbindEBO();
 
   // Main Loop
 
@@ -104,6 +114,9 @@ int main()
 
   // Terminating the Program
 
+  dsr_deleteVAO(&VAO1);
+  dsr_deleteVBO(&VBO1);
+  dsr_deleteEBO(&EBO1);
   glfwDestroyWindow(window);
   glfwTerminate();
   return EXIT_SUCCESS;

@@ -45,3 +45,29 @@ void dsr_deleteEBO(EBO* EBO)
 {
   glDeleteBuffers(1, &EBO->ID);
 }
+
+void dsr_initVAO(VAO* VAO)
+{
+  glGenVertexArrays(1, &VAO->ID);
+}
+
+void dsr_linkAttrib(VBO* VBO, GLuint layout, GLuint size, GLenum type, GLsizeiptr stride, const void* offset)
+{
+  glVertexAttribPointer(layout, size, type, GL_FALSE, stride, offset);
+  glEnableVertexAttribArray(layout);  
+}
+
+void dsr_bindVAO(VAO* VAO)
+{
+  glBindVertexArray(VAO->ID);
+}
+
+void dsr_unbindVAO()
+{
+  glBindVertexArray(0);
+}
+
+void dsr_deleteVAO(VAO* VAO)
+{
+  glDeleteBuffers(1, &VAO->ID);
+}
