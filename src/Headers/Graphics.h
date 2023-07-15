@@ -3,6 +3,8 @@
 
 #include <GL/glew.h>
 
+#include "File.h"
+
 /**
  * Represents a Vertex Buffer Object.
 */
@@ -110,5 +112,31 @@ void dsr_unbindVAO();
  * @param VAO The VAO object to be deleted.
  */
 void dsr_deleteVAO(VAO* VAO);
+
+typedef struct Shader
+{
+  GLuint ID;
+} Shader;
+
+/**
+ * Initializes a Shader object with the provided vertex and fragment shader source code paths.
+ *
+ * @param shader             The Shader object to be initialized.
+ * @param vertexSourcePath   The file path to the vertex shader source code.
+ * @param fragmentSourcePath The file path to the fragment shader source code.
+ */
+void dsr_initShader(Shader* Shader, const char* vertexSourcePath, const char* fragmentSourcePath);
+/**
+ * Sets the specified Shader object as the current active shader program.
+ *
+ * @param shader The Shader object to be used.
+ */
+void dsr_useShader(Shader* Shader);
+/**
+ * Deletes the specified Shader object and releases associated resources.
+ *
+ * @param shader The Shader object to be deleted.
+ */
+void dsr_deleteShader(Shader* Shader);
 
 #endif // GRPAHICS_H

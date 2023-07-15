@@ -10,6 +10,10 @@
 
 void printEngineTitle();
 
+// Callbacks
+
+void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+
 // Constants
 
 const unsigned int WINDOW_WIDTH   = 800;
@@ -88,8 +92,8 @@ int main()
 
   // Shaders
 
-  const char* vertexShaderSource = dsr_file_getContents("src/Shaders/default.vert");
-  const char* fragmentShaderSource = dsr_file_getContents("src/Shaders/default.frag");
+  Shader defaultShader;
+  dsr_initShader(&defaultShader, "src/Shaders/default.vert", "src/Shaders/default.frag");
 
   // VAO, VBO, and EBO
 
@@ -98,19 +102,22 @@ int main()
   EBO EBO1;
 
   dsr_initVAO(&VAO1);
-  dsr_initVBO(&VBO1, vertices, sizeof(vertices) / sizeof(GLfloat));
-  dsr_initEBO(&EBO1, indices, sizeof(indices) / sizeof(GLuint));
+  dsr_initVBO(&VBO1, vertices, sizeof(vertices));
+  dsr_initEBO(&EBO1, indices, sizeof(indices));
 
   dsr_bindVAO(&VAO1);
   dsr_bindVBO(&VBO1);
   dsr_bindEBO(&EBO1);
 
-  dsr_linkAttrib(&VBO1, 0, 3, GL_FLOAT, 0, (void*)0);
+  dsr_linkAttrib(&VBO1, 0, 3, GL_FLOAT, 6 * sizeof(GLfloat), (void*)0);
   dsr_linkAttrib(&VBO1, 1, 3, GL_FLOAT, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-
   dsr_unbindVAO();
   dsr_unbindVBO();
   dsr_unbindEBO();
+
+  // Callbacks
+
+  glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
   // Main Loop
 
@@ -118,6 +125,11 @@ int main()
   {
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT);
+
+    dsr_useShader(&defaultShader);
+    dsr_bindVAO(&VAO1);
+    glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
+
     glfwSwapBuffers(window);
   }
 
@@ -126,6 +138,7 @@ int main()
   dsr_deleteVAO(&VAO1);
   dsr_deleteVBO(&VBO1);
   dsr_deleteEBO(&EBO1);
+  dsr_deleteShader(&defaultShader);
   glfwDestroyWindow(window);
   glfwTerminate();
   return EXIT_SUCCESS;
@@ -138,4 +151,11 @@ void printEngineTitle()
   printf("%s %s\n", ENGINE_NAME, ENGINE_VERSION);
   printf("Created by %s\n", ENGINE_AUTHOR);
   printf("Licensed under %s\n\n", ENGINE_LICENSE);
+}
+
+// Callbacks
+
+void framebufferSizeCallback(GLFWwindow* window, int width, int height)
+{
+  glViewport(0, 0, width, height);
 }
