@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 #include "Headers/Graphics.h"
+#include "Headers/File.h"
 
 // Functions
 
@@ -22,12 +23,12 @@ const char*        ENGINE_VERSION = "0.1";
 // Vertices and Indices
 
 GLfloat vertices[] = {
-  -0.5f,  -0.5f, 0.f,
-   0.0f,  -0.5f, 0.f,
-   0.5f,  -0.5f, 0.f,
-  -0.25f,  0.0f, 0.f,
-   0.25f,  0.0f, 0.f,
-   0.0f,   0.5f, 0.f,
+  -0.5f,  -0.5f, 0.f, 1.f, 0.f, 0.f,
+   0.0f,  -0.5f, 0.f, 0.f, 1.f, 0.f,
+   0.5f,  -0.5f, 0.f, 0.f, 0.f, 1.f,
+  -0.25f,  0.0f, 0.f, 1.f, 1.f, 0.f,
+   0.25f,  0.0f, 0.f, 0.f, 1.f, 1.f,
+   0.0f,   0.5f, 0.f, 1.f, 0.f, 1.f,
 };
 GLuint indices[] = {
   0, 1, 3,
@@ -85,6 +86,11 @@ int main()
   GLclampf alpha = 1.0f;
   glClearColor(red, green, blue, alpha);
 
+  // Shaders
+
+  const char* vertexShaderSource = dsr_file_getContents("src/Shaders/default.vert");
+  const char* fragmentShaderSource = dsr_file_getContents("src/Shaders/default.frag");
+
   // VAO, VBO, and EBO
 
   VAO VAO1;
@@ -98,6 +104,9 @@ int main()
   dsr_bindVAO(&VAO1);
   dsr_bindVBO(&VBO1);
   dsr_bindEBO(&EBO1);
+
+  dsr_linkAttrib(&VBO1, 0, 3, GL_FLOAT, 0, (void*)0);
+  dsr_linkAttrib(&VBO1, 1, 3, GL_FLOAT, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
 
   dsr_unbindVAO();
   dsr_unbindVBO();
