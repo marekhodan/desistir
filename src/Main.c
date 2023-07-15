@@ -19,12 +19,20 @@ const char*        ENGINE_AUTHOR  = "Marek Hodan";
 const char*        ENGINE_LICENSE = "GNU GPLv3";
 const char*        ENGINE_VERSION = "0.1";
 
-// Vertices
+// Vertices and Indices
 
 GLfloat vertices[] = {
-  -0.5f, -0.5f, 0.f,
-   0.5f, -0.5f, 0.f,
-   0.0f,  0.5f, 0.f,
+  -0.5f,  -0.5f, 0.f,
+   0.0f,  -0.5f, 0.f,
+   0.5f,  -0.5f, 0.f,
+  -0.25f,  0.0f, 0.f,
+   0.25f,  0.0f, 0.f,
+   0.0f,   0.5f, 0.f,
+};
+GLuint indices[] = {
+  0, 1, 3,
+  1, 2, 4,
+  3, 4, 5,
 };
 
 int main()
@@ -77,10 +85,13 @@ int main()
   GLclampf alpha = 1.0f;
   glClearColor(red, green, blue, alpha);
 
-  // VBO
+  // VBO and EBO
 
   VBO VBO1;
+  EBO EBO1;
+
   dsr_initVBO(&VBO1, vertices, sizeof(vertices) / sizeof(GLfloat));
+  dsr_initEBO(&EBO1, indices, sizeof(indices) / sizeof(GLuint));
 
   // Main Loop
 
